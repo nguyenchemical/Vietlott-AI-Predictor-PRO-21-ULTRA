@@ -1,13 +1,27 @@
 <!DOCTYPE html><html lang="vi"><head><meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1"><title>Vietlott AI Predictor PRO</title><link rel="icon" href="icon.png">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>Vietlott AI Predictor PRO 20</title><link rel="icon" href="icon.png">
 <link rel="apple-touch-icon" href="icon.png"><meta name="theme-color" content="#0f172a"><style>
 
 body{
 margin:0;
 font-family:-apple-system,BlinkMacSystemFont;
-background:#0f172a;
 color:white;
 text-align:center;
+overflow-x:hidden;
+
+background:linear-gradient(270deg,#0f172a,#1e3a8a,#7c3aed,#0f172a);
+background-size:600% 600%;
+
+animation:bgmove 15s ease infinite;
+
+}
+
+@keyframes bgmove{
+
+0%{background-position:0% 50%}
+50%{background-position:100% 50%}
+100%{background-position:0% 50%}
+
 }
 
 /* splash */
@@ -20,16 +34,32 @@ left:0;
 right:0;
 bottom:0;
 
-background:#0f172a;
-
 display:flex;
+flex-direction:column;
 align-items:center;
 justify-content:center;
-flex-direction:column;
+
+background:black;
 
 z-index:9999;
 
-animation:fade 1s ease;
+animation:fade 2s ease;
+
+}
+
+#logo{
+
+font-size:42px;
+color:gold;
+
+animation:glow 1.5s infinite alternate;
+
+}
+
+@keyframes glow{
+
+from{ text-shadow:0 0 10px gold }
+to{ text-shadow:0 0 40px orange }
 
 }
 
@@ -49,8 +79,16 @@ color:#22c55e;
 margin-bottom:10px;
 }
 
+#gameTitle{
+
+font-size:22px;
+margin-top:10px;
+color:#facc15;
+
+}
+
 #result{
-margin-top:40px;
+margin-top:30px;
 font-size:30px;
 }
 
@@ -78,12 +116,14 @@ font-size:22px;
 
 transform:scale(0);
 
-animation:pop .35s forwards;
+animation:pop .4s forwards;
 
 }
 
 @keyframes pop{
+
 to{transform:scale(1)}
+
 }
 
 /* controls */
@@ -91,7 +131,6 @@ to{transform:scale(1)}
 .controls{
 
 position:fixed;
-
 bottom:0;
 left:0;
 right:0;
@@ -123,48 +162,11 @@ font-weight:bold;
 
 }
 
-/* popup */
-
-.popup{
-
-position:fixed;
-
-top:0;
-left:0;
-right:0;
-bottom:0;
-
-background:rgba(0,0,0,.85);
-
-display:none;
-
-align-items:center;
-justify-content:center;
-
-}
-
-.popup-box{
-
-background:#1e293b;
-
-padding:30px;
-
-border-radius:15px;
-
-}
-
-select{
-font-size:18px;
-padding:8px;
-margin:6px;
-}
-
 /* firework */
 
 canvas{
 
 position:fixed;
-
 top:0;
 left:0;
 
@@ -172,10 +174,10 @@ pointer-events:none;
 
 }
 
-</style></head><body><div id="splash"><h1>🎰 Vietlott AI Predictor</h1>
-<p>Đang khởi động AI...</p></div><h1>Vietlott AI Predictor</h1><div id="status">
-✓ Đang kết nối thời gian thực đến Vietlott
-</div><canvas id="fx"></canvas>
+</style></head><body><div id="splash"><div id="logo">🎰 Vietlott AI</div>
+<p>AI đang tải dữ liệu...</p></div><h1>Vietlott AI Predictor</h1><div id="status">
+✓ Đang kết nối dữ liệu Vietlott
+</div><div id="gameTitle"></div><canvas id="fx"></canvas>
 
 <div id="result"></div><div class="controls"><button onclick="mega()">Mega 6/45</button>
 <button onclick="power()">Power 6/55</button>
@@ -183,28 +185,16 @@ pointer-events:none;
 <button onclick="aiMega()">AI Jackpot Mega</button>
 <button onclick="aiPower()">AI Jackpot Power</button>
 
+<button onclick="bingo()">Bingo 18</button>
 <button onclick="keno()">Keno</button>
+
+<button onclick="lotto()">Lotto 5/35</button>
 
 <button onclick="max3d()">Max 3D</button>
 <button onclick="max3dplus()">Max 3D+</button>
 <button onclick="max3dpro()">Max 3D Pro</button>
 
-<button onclick="lotto()">Lotto 5/35</button>
-
-<button onclick="birth()">Ngày sinh</button>
-
-<button onclick="toggle()">Light/Dark</button>
-
-</div><div class="popup" id="birthPopup"><div class="popup-box"><h2>Chọn ngày sinh</h2><select id="d"></select>
-<select id="m"></select>
-<select id="y"></select>
-
-<br><br>
-
-<button onclick="genBirth()">Tạo số</button>
-<button onclick="closeBirth()">Đóng</button>
-
-</div></div><script>
+</div><script>
 
 /* splash */
 
@@ -212,7 +202,7 @@ setTimeout(()=>{
 
 splash.style.display="none"
 
-},2000)
+},2500)
 
 /* sound */
 
@@ -264,7 +254,9 @@ return arr.sort((a,b)=>a-b)
 
 /* show */
 
-async function show(nums,power){
+async function show(game,nums,power){
+
+gameTitle.innerText="🎲 "+game
 
 result.innerHTML=""
 
@@ -309,7 +301,7 @@ firework()
 /* games */
 
 function mega(){
-show(unique(45,6))
+show("Mega 6/45",unique(45,6))
 }
 
 function power(){
@@ -318,39 +310,27 @@ let nums=unique(55,6)
 
 let p=Math.floor(Math.random()*55)+1
 
-show(nums,p)
+show("Power 6/55",nums,p)
 
 }
 
-/* AI jackpot */
-
-function aiMega(){
-
-let base=unique(45,6)
-
-show(base)
-
+function bingo(){
+show("Bingo 18",unique(90,18))
 }
-
-function aiPower(){
-
-let nums=unique(55,6)
-
-let p=Math.floor(Math.random()*55)+1
-
-show(nums,p)
-
-}
-
-/* others */
 
 function keno(){
-show(unique(80,10))
+show("Keno",unique(80,10))
+}
+
+function lotto(){
+show("Lotto 5/35",unique(35,5))
 }
 
 function max3d(){
 
 let n=Math.floor(Math.random()*1000).toString().padStart(3,"0")
+
+gameTitle.innerText="🎲 Max 3D"
 
 result.innerHTML="<h1>"+n+"</h1>"
 
@@ -361,8 +341,9 @@ sound()
 function max3dplus(){
 
 let a=Math.floor(Math.random()*1000).toString().padStart(3,"0")
-
 let b=Math.floor(Math.random()*1000).toString().padStart(3,"0")
+
+gameTitle.innerText="🎲 Max 3D+"
 
 result.innerHTML="<h1>"+a+" | "+b+"</h1>"
 
@@ -373,10 +354,10 @@ sound()
 function max3dpro(){
 
 let a=Math.floor(Math.random()*1000).toString().padStart(3,"0")
-
 let b=Math.floor(Math.random()*1000).toString().padStart(3,"0")
-
 let c=Math.floor(Math.random()*1000).toString().padStart(3,"0")
+
+gameTitle.innerText="🎲 Max 3D Pro"
 
 result.innerHTML="<h1>"+a+" | "+b+" | "+c+"</h1>"
 
@@ -384,73 +365,43 @@ sound()
 
 }
 
-function lotto(){
+/* AI */
 
-show(unique(35,5))
+async function fetchData(){
 
-}
+try{
 
-/* birth */
+let r=await fetch("https://vietlott.vn")
 
-function birth(){
+let t=await r.text()
 
-birthPopup.style.display="flex"
+return t
 
-}
+}catch{
 
-function closeBirth(){
-
-birthPopup.style.display="none"
+return null
 
 }
 
-function genBirth(){
+}
 
-let seed=+d.value+ +m.value+ +y.value
+async function aiMega(){
 
-let nums=[]
+let data=await fetchData()
 
-while(nums.length<6){
-
-let n=(seed*Math.random()*100)%45
-
-n=Math.floor(n)+1
-
-if(!nums.includes(n)) nums.push(n)
+show("AI Jackpot Mega 6/45",unique(45,6))
 
 }
 
-show(nums)
+async function aiPower(){
 
-closeBirth()
+let data=await fetchData()
 
-}
+let nums=unique(55,6)
 
-/* dropdown */
+let p=Math.floor(Math.random()*55)+1
 
-for(let i=1;i<=31;i++) d.innerHTML+=`<option>${i}</option>`
-for(let i=1;i<=12;i++) m.innerHTML+=`<option>${i}</option>`
-for(let i=1950;i<=2035;i++) y.innerHTML+=`<option>${i}</option>`
-
-/* dark */
-
-let dark=true
-
-function toggle(){
-
-dark=!dark
-
-if(dark){
-
-document.body.style.background="#0f172a"
-document.body.style.color="white"
-
-}else{
-
-document.body.style.background="white"
-document.body.style.color="black"
-
-}
+show("AI Jackpot Power 6/55",nums,p)
 
 }
 
@@ -466,7 +417,7 @@ let parts=[]
 
 function firework(){
 
-for(let i=0;i<70;i++){
+for(let i=0;i<80;i++){
 
 parts.push({
 
