@@ -1,9 +1,10 @@
 <!DOCTYPE html><html lang="vi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1"><title>Vietlott AI Predictor PRO 17</title><style>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Vietlott AI Predictor PRO 18</title><style>
 body{
-font-family:Arial;
+font-family:Arial,Helvetica,sans-serif;
 margin:0;
 text-align:center;
 background:#0f172a;
@@ -16,7 +17,7 @@ color:black;
 }
 
 .container{
-max-width:650px;
+max-width:700px;
 margin:auto;
 padding:20px;
 }
@@ -33,9 +34,9 @@ cursor:pointer;
 
 .ball{
 display:inline-block;
-width:45px;
-height:45px;
-line-height:45px;
+width:46px;
+height:46px;
+line-height:46px;
 border-radius:50%;
 background:gold;
 color:black;
@@ -61,19 +62,68 @@ padding:20px;
 border-radius:10px;
 }
 
-</style></head><body><div class="container"><h2>Vietlott AI Predictor PRO 17</h2><div onclick="openVietlott()" style="cursor:pointer">
+#firework{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+pointer-events:none;
+}
+</style></head><body><canvas id="firework"></canvas>
+
+<div class="container"><h2>Vietlott AI Predictor PRO 18</h2><div onclick="openVietlott()" style="cursor:pointer">
 Đang kết nối thời gian thực Vietlott
 </div><br><button onclick="predictMega()">Mega 6/45</button>
 <button onclick="predictPower()">Power 6/55</button>
+
 <button onclick="predictKeno()">Keno</button>
+
 <button onclick="predictMax3D()">Max 3D</button>
 <button onclick="predictMax3DPlus()">Max 3D+</button>
+<button onclick="predictMax3DPro()">Max 3D Pro</button>
+
 <button onclick="predictBingo()">Bingo18</button>
 <button onclick="predictLotto()">Lotto 5/35</button>
 
-<br><button onclick="toggleTheme()">Light / Dark</button>
+<br><button onclick="jackpotMega()">AI Jackpot Mega</button>
+<button onclick="jackpotPower()">AI Jackpot Power</button>
 
-<div id="result"></div></div><script>
+<br><button onclick="openBirth()">Tạo theo ngày sinh</button>
+<button onclick="toggleTheme()">Light / Dark</button>
+
+<div id="result" style="margin-top:20px"></div></div><div class="popup" id="birthPopup">
+<div class="popup-box"><h3>Chọn ngày sinh</h3><select id="day"></select>
+<select id="month"></select>
+<select id="year"></select>
+
+<br><br>
+
+<button onclick="generateBirth()">Tạo số</button>
+<button onclick="closeBirth()">Đóng</button>
+
+</div>
+</div><script>
+
+/* SOUND */
+
+function playSound(){
+let ctx = new (window.AudioContext || window.webkitAudioContext)()
+let o = ctx.createOscillator()
+o.type="sine"
+o.frequency.value=700
+o.connect(ctx.destination)
+o.start()
+setTimeout(()=>o.stop(),120)
+}
+
+/* VIBRATION */
+
+function vibrate(){
+if(navigator.vibrate) navigator.vibrate(120)
+}
+
+/* RANDOM UNIQUE */
 
 function randomUnique(max,count){
 
@@ -91,7 +141,12 @@ return arr.sort((a,b)=>a-b)
 
 }
 
-function showNumbers(nums){
+/* SHOW NUMBERS */
+
+function showNumbers(nums,power){
+
+playSound()
+vibrate()
 
 let r=document.getElementById("result")
 
@@ -101,17 +156,26 @@ nums.forEach(n=>{
 r.innerHTML+=`<div class="ball">${n}</div>`
 })
 
+if(power){
+r.innerHTML+=`<div class="ball" style="background:red;color:white">${power}</div>`
+}
+
+firework()
+
 }
 
 function showText(text){
 
-let r=document.getElementById("result")
+playSound()
+vibrate()
 
-r.innerHTML="<h2>"+text+"</h2>"
+document.getElementById("result").innerHTML="<h2>"+text+"</h2>"
+
+firework()
 
 }
 
-/* Mega */
+/* MEGA */
 
 function predictMega(){
 
@@ -119,22 +183,39 @@ showNumbers(randomUnique(45,6))
 
 }
 
-/* Power */
+/* POWER */
 
 function predictPower(){
 
 let nums=randomUnique(55,6)
 
-let power=Math.floor(Math.random()*55)+1
+let remain=[]
 
-nums.push("|")
-nums.push(power)
+for(let i=1;i<=55;i++){
+if(!nums.includes(i)) remain.push(i)
+}
 
-showNumbers(nums)
+let power=remain[Math.floor(Math.random()*remain.length)]
+
+showNumbers(nums,power)
 
 }
 
-/* Keno */
+/* JACKPOT */
+
+function jackpotMega(){
+
+predictMega()
+
+}
+
+function jackpotPower(){
+
+predictPower()
+
+}
+
+/* KENO */
 
 function predictKeno(){
 
@@ -142,7 +223,7 @@ showNumbers(randomUnique(80,10))
 
 }
 
-/* Max3D */
+/* MAX 3D */
 
 function predictMax3D(){
 
@@ -151,8 +232,6 @@ let n=Math.floor(Math.random()*1000).toString().padStart(3,"0")
 showText(n)
 
 }
-
-/* Max3D+ */
 
 function predictMax3DPlus(){
 
@@ -163,7 +242,16 @@ showText(a+" | "+b)
 
 }
 
-/* Bingo */
+function predictMax3DPro(){
+
+let a=Math.floor(Math.random()*1000).toString().padStart(3,"0")
+let b=Math.floor(Math.random()*1000).toString().padStart(3,"0")
+
+showText(a+" | "+b)
+
+}
+
+/* BINGO */
 
 function predictBingo(){
 
@@ -171,7 +259,7 @@ showNumbers(randomUnique(90,18))
 
 }
 
-/* Lotto */
+/* LOTTO */
 
 function predictLotto(){
 
@@ -179,7 +267,7 @@ showNumbers(randomUnique(35,5))
 
 }
 
-/* theme */
+/* THEME */
 
 function toggleTheme(){
 
@@ -187,11 +275,120 @@ document.body.classList.toggle("light")
 
 }
 
+/* VIETLOTT */
+
 function openVietlott(){
 
 window.open("https://vietlott.vn")
 
 }
+
+/* POPUP */
+
+function openBirth(){
+
+document.getElementById("birthPopup").style.display="flex"
+
+}
+
+function closeBirth(){
+
+document.getElementById("birthPopup").style.display="none"
+
+}
+
+/* BIRTH */
+
+function generateBirth(){
+
+let d=document.getElementById("day").value
+let m=document.getElementById("month").value
+let y=document.getElementById("year").value
+
+let seed=parseInt(d)+parseInt(m)+parseInt(y)
+
+let nums=[]
+
+while(nums.length<6){
+
+let n=(seed*Math.random()*100)%45
+n=Math.floor(n)+1
+
+if(!nums.includes(n)) nums.push(n)
+
+}
+
+showNumbers(nums)
+
+closeBirth()
+
+}
+
+/* DROPDOWN */
+
+for(let i=1;i<=31;i++){
+day.innerHTML+=`<option>${i}</option>`
+}
+
+for(let i=1;i<=12;i++){
+month.innerHTML+=`<option>${i}</option>`
+}
+
+for(let i=1950;i<=2030;i++){
+year.innerHTML+=`<option>${i}</option>`
+}
+
+/* FIREWORK */
+
+const canvas=document.getElementById("firework")
+const ctx=canvas.getContext("2d")
+
+canvas.width=window.innerWidth
+canvas.height=window.innerHeight
+
+let particles=[]
+
+function firework(){
+
+for(let i=0;i<80;i++){
+
+particles.push({
+
+x:canvas.width/2,
+y:canvas.height,
+vx:(Math.random()-0.5)*6,
+vy:-Math.random()*8,
+life:60
+
+})
+
+}
+
+}
+
+function animate(){
+
+ctx.clearRect(0,0,canvas.width,canvas.height)
+
+particles.forEach(p=>{
+
+p.x+=p.vx
+p.y+=p.vy
+p.vy+=0.1
+p.life--
+
+ctx.fillStyle="gold"
+ctx.fillRect(p.x,p.y,3,3)
+
+})
+
+particles=particles.filter(p=>p.life>0)
+
+requestAnimationFrame(animate)
+
+}
+
+animate()
 
 </script></body>
 </html>
