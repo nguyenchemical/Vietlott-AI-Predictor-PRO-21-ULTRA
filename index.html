@@ -1,12 +1,11 @@
 <!DOCTYPE html><html lang="vi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Vietlott AI Predictor PRO 18</title><style>
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>Vietlott AI Predictor PRO 19</title><style>
 
 body{
-font-family:Arial;
 margin:0;
+font-family:Arial;
 background:#0f172a;
 color:white;
 text-align:center;
@@ -17,55 +16,82 @@ background:white;
 color:black;
 }
 
-.container{
-max-width:720px;
-margin:auto;
-padding:20px;
+/* RESULT AREA */
+
+#result{
+position:absolute;
+top:30%;
+left:50%;
+transform:translate(-50%,-50%);
+min-height:80px;
 }
 
-/* GAME BOX */
-
-.gamebox{
-border:2px solid gold;
-border-radius:15px;
-padding:15px;
-margin-top:15px;
-}
-
-/* BUTTON */
-
-button{
-padding:12px 18px;
-margin:6px;
-border:none;
-border-radius:20px;
-background:gold;
-color:black;
-font-weight:bold;
-font-size:15px;
-cursor:pointer;
-}
-
-/* RESULT BALL */
+/* BALL */
 
 .ball{
 display:inline-block;
-width:48px;
-height:48px;
-line-height:48px;
+width:52px;
+height:52px;
+line-height:52px;
 border-radius:50%;
 background:gold;
 color:black;
 font-weight:bold;
 margin:6px;
+font-size:18px;
+
+opacity:0;
+transform:scale(0.5);
+
+animation:pop 0.4s forwards;
 }
 
-/* LINK STATUS */
+@keyframes pop{
+to{
+opacity:1;
+transform:scale(1);
+}
+}
+
+/* STATUS */
 
 .status{
+margin-top:15px;
 color:#22c55e;
 font-weight:bold;
 cursor:pointer;
+}
+
+/* BUTTON BAR */
+
+.controls{
+
+position:fixed;
+bottom:0;
+left:0;
+right:0;
+
+background:#111827;
+
+padding:12px;
+
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+
+}
+
+.controls button{
+
+margin:4px;
+padding:8px 12px;
+border:none;
+border-radius:15px;
+background:gold;
+color:black;
+font-weight:bold;
+font-size:13px;
+
 }
 
 /* POPUP */
@@ -76,7 +102,7 @@ top:0;
 left:0;
 right:0;
 bottom:0;
-background:rgba(0,0,0,0.75);
+background:rgba(0,0,0,0.8);
 display:none;
 align-items:center;
 justify-content:center;
@@ -84,24 +110,17 @@ justify-content:center;
 
 .popup-box{
 background:#1e293b;
-padding:35px;
+padding:40px;
 border-radius:15px;
-width:85%;
+width:90%;
 max-width:500px;
 }
 
 select{
+font-size:20px;
 padding:10px;
 margin:6px;
-font-size:18px;
 }
-
-#result{
-margin-top:20px;
-min-height:70px;
-}
-
-/* FIREWORK */
 
 canvas{
 position:fixed;
@@ -112,33 +131,32 @@ pointer-events:none;
 
 </style></head><body><canvas id="firework"></canvas>
 
-<div class="container"><h2>Vietlott AI Predictor PRO 18</h2><div class="status" onclick="openVietlott()">
+<h2>Vietlott AI Predictor PRO 19</h2><div class="status" onclick="openVietlott()">
 ✓ Đang kết nối thời gian thực đến Vietlott
-</div><div class="gamebox"><h3>Dự đoán Vietlott</h3><button onclick="predictMega()">Mega 6/45</button>
-<button onclick="predictPower()">Power 6/55</button>
-
+</div><div id="result"></div><!-- CONTROLS --><div class="controls"><button onclick="predictMega()">Mega</button>
+<button onclick="predictPower()">Power</button>
 <button onclick="predictKeno()">Keno</button>
 
-<button onclick="predictMax3D()">Max 3D</button>
-<button onclick="predictMax3DPlus()">Max 3D+</button>
-<button onclick="predictMax3DPro()">Max 3D Pro</button>
+<button onclick="predictMax3D()">Max3D</button>
+<button onclick="predictMax3DPlus()">Max3D+</button>
+<button onclick="predictMax3DPro()">Max3DPro</button>
 
-<button onclick="predictBingo()">Bingo18</button>
-<button onclick="predictLotto()">Lotto 5/35</button>
+<button onclick="predictBingo()">Bingo</button>
+<button onclick="predictLotto()">Lotto</button>
 
-<br><button onclick="jackpotMega()">AI Jackpot Mega</button>
-<button onclick="jackpotPower()">AI Jackpot Power</button>
+<button onclick="jackpotMega()">AI Mega</button>
+<button onclick="jackpotPower()">AI Power</button>
 
-<br><button onclick="openBirth()">Tạo theo ngày sinh</button>
-<button onclick="toggleTheme()">Light / Dark</button>
+<button onclick="openBirth()">Ngày sinh</button>
+<button onclick="toggleTheme()">Theme</button>
 
-</div><div id="result"></div></div><!-- POPUP --><div class="popup" id="birthPopup"><div class="popup-box"><h2>Chọn ngày sinh</h2><select id="day"></select>
+</div><!-- POPUP --><div class="popup" id="birthPopup"><div class="popup-box"><h2>Chọn ngày sinh</h2><select id="day"></select>
 <select id="month"></select>
 <select id="year"></select>
 
 <br><br>
 
-<button onclick="generateBirth()">Tạo bộ số</button>
+<button onclick="generateBirth()">Tạo số</button>
 <button onclick="closeBirth()">Đóng</button>
 
 </div></div><script>
@@ -147,18 +165,18 @@ pointer-events:none;
 
 function playSound(){
 
-const ctx = new (window.AudioContext || window.webkitAudioContext)()
+let ctx=new (window.AudioContext||window.webkitAudioContext)()
 
-const o = ctx.createOscillator()
+let o=ctx.createOscillator()
 
+o.frequency.value=700
 o.type="triangle"
-o.frequency.value=650
 
 o.connect(ctx.destination)
 
 o.start()
 
-setTimeout(()=>o.stop(),150)
+setTimeout(()=>o.stop(),120)
 
 }
 
@@ -168,7 +186,7 @@ function vibrate(){
 
 if("vibrate" in navigator){
 
-navigator.vibrate(120)
+navigator.vibrate(100)
 
 }
 
@@ -192,38 +210,60 @@ return arr.sort((a,b)=>a-b)
 
 }
 
-/* SHOW */
+/* DISPLAY */
 
-function showNumbers(nums,power){
-
-playSound()
-vibrate()
+async function showNumbers(nums,power){
 
 let r=document.getElementById("result")
 
 r.innerHTML=""
 
-nums.forEach(n=>{
-r.innerHTML+=`<div class="ball">${n}</div>`
-})
+for(let n of nums){
+
+await new Promise(res=>setTimeout(res,200))
+
+let d=document.createElement("div")
+
+d.className="ball"
+
+d.innerText=n
+
+r.appendChild(d)
+
+playSound()
+
+}
 
 if(power){
 
-r.innerHTML+=`<div class="ball" style="background:red;color:white">${power}</div>`
+await new Promise(res=>setTimeout(res,200))
+
+let p=document.createElement("div")
+
+p.className="ball"
+
+p.style.background="red"
+
+p.style.color="white"
+
+p.innerText=power
+
+r.appendChild(p)
 
 }
+
+vibrate()
 
 firework()
 
 }
 
-function showText(text){
+function showText(t){
+
+document.getElementById("result").innerHTML="<h1>"+t+"</h1>"
 
 playSound()
 vibrate()
-
-document.getElementById("result").innerHTML="<h2>"+text+"</h2>"
-
 firework()
 
 }
@@ -287,8 +327,6 @@ showNumbers(randomUnique(35,5))
 
 }
 
-/* JACKPOT */
-
 function jackpotMega(){
 
 predictMega()
@@ -309,7 +347,7 @@ document.body.classList.toggle("light")
 
 }
 
-/* LINK */
+/* VIETLOTT */
 
 function openVietlott(){
 
@@ -321,13 +359,13 @@ window.open("https://vietlott.vn")
 
 function openBirth(){
 
-document.getElementById("birthPopup").style.display="flex"
+birthPopup.style.display="flex"
 
 }
 
 function closeBirth(){
 
-document.getElementById("birthPopup").style.display="none"
+birthPopup.style.display="none"
 
 }
 
@@ -335,11 +373,7 @@ document.getElementById("birthPopup").style.display="none"
 
 function generateBirth(){
 
-let d=day.value
-let m=month.value
-let y=year.value
-
-let seed=parseInt(d)+parseInt(m)+parseInt(y)
+let seed=+day.value + +month.value + +year.value
 
 let nums=[]
 
@@ -361,23 +395,9 @@ closeBirth()
 
 /* DROPDOWN */
 
-for(let i=1;i<=31;i++){
-
-day.innerHTML+=`<option>${i}</option>`
-
-}
-
-for(let i=1;i<=12;i++){
-
-month.innerHTML+=`<option>${i}</option>`
-
-}
-
-for(let i=1950;i<=2035;i++){
-
-year.innerHTML+=`<option>${i}</option>`
-
-}
+for(let i=1;i<=31;i++) day.innerHTML+=`<option>${i}</option>`
+for(let i=1;i<=12;i++) month.innerHTML+=`<option>${i}</option>`
+for(let i=1950;i<=2035;i++) year.innerHTML+=`<option>${i}</option>`
 
 /* FIREWORK */
 
@@ -397,8 +417,10 @@ particles.push({
 
 x:canvas.width/2,
 y:canvas.height,
+
 vx:(Math.random()-0.5)*6,
 vy:-Math.random()*8,
+
 life:60
 
 })
