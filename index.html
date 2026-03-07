@@ -1,9 +1,197 @@
-index.html
-│
-├── CSS
-├── AI engine
-├── Vietlott predictor
-├── Firework engine
-├── Sound base64
-├── Vibration
-└── UI
+<!DOCTYPE html><html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>Vietlott AI Predictor PRO 17</title><style>
+body{
+font-family:Arial;
+margin:0;
+text-align:center;
+background:#0f172a;
+color:white;
+}
+
+.light{
+background:white;
+color:black;
+}
+
+.container{
+max-width:650px;
+margin:auto;
+padding:20px;
+}
+
+button{
+padding:10px 16px;
+margin:6px;
+border:none;
+border-radius:20px;
+background:gold;
+font-weight:bold;
+cursor:pointer;
+}
+
+.ball{
+display:inline-block;
+width:45px;
+height:45px;
+line-height:45px;
+border-radius:50%;
+background:gold;
+color:black;
+font-weight:bold;
+margin:5px;
+}
+
+.popup{
+position:fixed;
+top:0;
+left:0;
+right:0;
+bottom:0;
+background:rgba(0,0,0,0.7);
+display:none;
+align-items:center;
+justify-content:center;
+}
+
+.popup-box{
+background:#1e293b;
+padding:20px;
+border-radius:10px;
+}
+
+</style></head><body><div class="container"><h2>Vietlott AI Predictor PRO 17</h2><div onclick="openVietlott()" style="cursor:pointer">
+Đang kết nối thời gian thực Vietlott
+</div><br><button onclick="predictMega()">Mega 6/45</button>
+<button onclick="predictPower()">Power 6/55</button>
+<button onclick="predictKeno()">Keno</button>
+<button onclick="predictMax3D()">Max 3D</button>
+<button onclick="predictMax3DPlus()">Max 3D+</button>
+<button onclick="predictBingo()">Bingo18</button>
+<button onclick="predictLotto()">Lotto 5/35</button>
+
+<br><button onclick="toggleTheme()">Light / Dark</button>
+
+<div id="result"></div></div><script>
+
+function randomUnique(max,count){
+
+let arr=[]
+
+while(arr.length<count){
+
+let n=Math.floor(Math.random()*max)+1
+
+if(!arr.includes(n)) arr.push(n)
+
+}
+
+return arr.sort((a,b)=>a-b)
+
+}
+
+function showNumbers(nums){
+
+let r=document.getElementById("result")
+
+r.innerHTML=""
+
+nums.forEach(n=>{
+r.innerHTML+=`<div class="ball">${n}</div>`
+})
+
+}
+
+function showText(text){
+
+let r=document.getElementById("result")
+
+r.innerHTML="<h2>"+text+"</h2>"
+
+}
+
+/* Mega */
+
+function predictMega(){
+
+showNumbers(randomUnique(45,6))
+
+}
+
+/* Power */
+
+function predictPower(){
+
+let nums=randomUnique(55,6)
+
+let power=Math.floor(Math.random()*55)+1
+
+nums.push("|")
+nums.push(power)
+
+showNumbers(nums)
+
+}
+
+/* Keno */
+
+function predictKeno(){
+
+showNumbers(randomUnique(80,10))
+
+}
+
+/* Max3D */
+
+function predictMax3D(){
+
+let n=Math.floor(Math.random()*1000).toString().padStart(3,"0")
+
+showText(n)
+
+}
+
+/* Max3D+ */
+
+function predictMax3DPlus(){
+
+let a=Math.floor(Math.random()*1000).toString().padStart(3,"0")
+let b=Math.floor(Math.random()*1000).toString().padStart(3,"0")
+
+showText(a+" | "+b)
+
+}
+
+/* Bingo */
+
+function predictBingo(){
+
+showNumbers(randomUnique(90,18))
+
+}
+
+/* Lotto */
+
+function predictLotto(){
+
+showNumbers(randomUnique(35,5))
+
+}
+
+/* theme */
+
+function toggleTheme(){
+
+document.body.classList.toggle("light")
+
+}
+
+function openVietlott(){
+
+window.open("https://vietlott.vn")
+
+}
+
+</script></body>
+</html>
