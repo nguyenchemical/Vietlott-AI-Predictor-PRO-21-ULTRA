@@ -1,17 +1,17 @@
 <!DOCTYPE html><html lang="vi">
 <head>
 <meta charset="UTF-8">
-<title>Trợ Lý Dự Đoán Vietlott AI ULTRA</title><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="icon.png"><style>
+<title>Vietlott AI Predictor PRO 25 MEGA</title><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="icon.png"><style>
 
 body{
 margin:0;
-font-family:Arial,Helvetica;
+font-family:Arial;
 text-align:center;
-color:#111;
+color:white;
 
-background:linear-gradient(270deg,#ffffff,#e9f6ff,#fdfefe,#ffffff);
+background:linear-gradient(270deg,#1a1a2e,#16213e,#0f3460,#533483);
 background-size:600% 600%;
-animation:bgmove 18s infinite;
+animation:bgmove 20s infinite;
 }
 
 @keyframes bgmove{
@@ -20,44 +20,18 @@ animation:bgmove 18s infinite;
 100%{background-position:0% 50%}
 }
 
-#splash{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:black;
-color:white;
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:34px;
-z-index:9999;
-animation:splashfade 2.5s forwards;
-}
-
-@keyframes splashfade{
-0%{opacity:1}
-80%{opacity:1}
-100%{opacity:0;visibility:hidden}
-}
-
-.logo{
+.logo img{
+width:80px;
 margin-top:20px;
 }
 
-.logo img{
-width:80px;
-}
-
 .clock{
-font-size:18px;
 margin-top:5px;
+font-size:16px;
 }
 
 .status{
 margin-top:6px;
-font-size:15px;
 }
 
 .led{
@@ -79,7 +53,6 @@ animation:blink 1s infinite;
 .resultTitle{
 font-size:22px;
 margin-top:15px;
-font-weight:bold;
 }
 
 .result{
@@ -96,7 +69,7 @@ border-radius:50%;
 margin:6px;
 font-size:20px;
 font-weight:bold;
-background:#ffd700;
+background:gold;
 color:black;
 box-shadow:0 0 10px gold;
 }
@@ -104,6 +77,25 @@ box-shadow:0 0 10px gold;
 .power{
 background:red;
 color:white;
+}
+
+.meter{
+width:80%;
+height:12px;
+background:#444;
+margin:15px auto;
+border-radius:10px;
+overflow:hidden;
+}
+
+.meterbar{
+height:100%;
+width:40%;
+background:red;
+}
+
+canvas{
+margin-top:10px;
 }
 
 .buttons{
@@ -114,16 +106,11 @@ width:100%;
 
 button{
 margin:4px;
-padding:10px 14px;
+padding:9px 14px;
 border:none;
 border-radius:20px;
-background:#007bff;
-color:white;
-font-size:15px;
-}
-
-canvas{
-margin-top:15px;
+background:gold;
+color:black;
 }
 
 .fire{
@@ -141,25 +128,38 @@ animation:rocket 1.2s ease-out forwards;
 100%{transform:translateY(-100vh)}
 }
 
-</style></head><body><div id="splash">
-🎰 Vietlott AI ULTRA
-</div><div class="logo">
+</style></head><body><div class="logo">
 <img src="icon.png">
-<h2>Trợ Lý Dự Đoán Vietlott AI</h2>
+<h2>Vietlott AI Predictor</h2>
 </div><div class="clock" id="clock"></div><div class="status">
 <span class="led"></span>
-Kết nối thời gian thực Vietlott
-</div><div class="resultTitle" id="gameTitle">
+Kết nối dữ liệu Vietlott
+</div>🎯 Jackpot Meter AI
+
+<div class="meter">
+<div id="meterbar" class="meterbar"></div>
+</div><div id="percent">40%</div><div class="resultTitle" id="gameTitle">
 Kết quả dự đoán
 </div><div class="result" id="result">
-Nhấn nút để quay
-</div><canvas id="chart" width="300" height="120"></canvas>
+Nhấn nút để bắt đầu
+</div><canvas id="chart" width="320" height="120"></canvas>
+<canvas id="wheel" width="200" height="200"></canvas>
 
 <div id="heatmap"></div><div class="buttons"><button onclick="mega()">Mega 6/45</button>
 <button onclick="power()">Power 6/55</button>
-<button onclick="spin()">🎰 Máy quay số</button>
+<button onclick="bingo()">Bingo 18</button>
+<button onclick="keno()">Keno</button>
+
+<br><button onclick="lotto()">Lotto 5/35</button>
+<button onclick="max3d()">Max 3D</button>
+<button onclick="max3dplus()">Max 3D+</button>
+<button onclick="max3dpro()">Max 3D Pro</button>
+
+<br><button onclick="spin()">🎰 Máy quay số</button>
 
 </div><script>
+
+/* CLOCK */
 
 function clock(){
 
@@ -180,6 +180,8 @@ day+"/"+month+"/"+year+" "+h+":"+m+":"+s
 
 setInterval(clock,1000)
 
+/* RANDOM */
+
 function rand(max){
 return Math.floor(Math.random()*max)+1
 }
@@ -197,8 +199,9 @@ if(!arr.includes(n)) arr.push(n)
 }
 
 return arr
-
 }
+
+/* SHOW RESULT */
 
 function show(nums,power,title){
 
@@ -226,34 +229,107 @@ r.appendChild(p)
 
 }
 
+meter()
+chart()
+heatmap()
+firework()
 sound()
 vibrate()
-firework()
-chart()
 
 }
 
-function mega(){
-show(unique(6,45),null,"Mega 6/45")
-}
+/* GAMES */
 
-function power(){
-show(unique(6,55),rand(55),"Power 6/55")
-}
+function mega(){ show(unique(6,45),null,"Mega 6/45") }
+
+function power(){ show(unique(6,55),rand(55),"Power 6/55") }
+
+function bingo(){ show(unique(5,18),null,"Bingo 18") }
+
+function keno(){ show(unique(10,80),null,"Keno") }
+
+function lotto(){ show(unique(5,35),null,"Lotto 5/35") }
+
+function max3d(){ show([rand(9),rand(9),rand(9)],null,"Max 3D") }
+
+function max3dplus(){ show([rand(9),rand(9),rand(9),rand(9)],null,"Max 3D+") }
+
+function max3dpro(){ show([rand(9),rand(9),rand(9),rand(9),rand(9)],null,"Max 3D Pro") }
+
+/* WHEEL SIMULATION */
 
 function spin(){
 
-document.getElementById("gameTitle").innerText="🎰 Máy quay số Vietlott"
+document.getElementById("gameTitle").innerText="🎰 Máy quay Vietlott"
 
-let r=document.getElementById("result")
+let c=document.getElementById("wheel")
+let ctx=c.getContext("2d")
 
-r.innerHTML="🎰 Đang quay..."
+ctx.clearRect(0,0,200,200)
 
-setTimeout(()=>{
-mega()
-},2000)
+for(let i=0;i<20;i++){
+
+ctx.beginPath()
+ctx.arc(100,100,80,0,Math.PI*2)
+ctx.strokeStyle="gold"
+ctx.stroke()
 
 }
+
+setTimeout(()=>mega(),2000)
+
+}
+
+/* JACKPOT METER */
+
+function meter(){
+
+let p=Math.floor(Math.random()*100)
+
+document.getElementById("percent").innerText=p+"%"
+
+document.getElementById("meterbar").style.width=p+"%"
+
+}
+
+/* CHART */
+
+function chart(){
+
+let c=document.getElementById("chart")
+let ctx=c.getContext("2d")
+
+ctx.clearRect(0,0,320,120)
+
+for(let i=0;i<20;i++){
+
+let x=i*15
+let h=Math.random()*100
+
+ctx.fillStyle="cyan"
+ctx.fillRect(x,120-h,10,h)
+
+}
+
+}
+
+/* HEATMAP */
+
+function heatmap(){
+
+let t="🔥 Heatmap số nóng: "
+
+for(let i=1;i<=10;i++){
+
+t+=i+"("+Math.floor(Math.random()*100)+"%) "
+
+}
+
+document.getElementById("heatmap").innerText=t
+
+}
+
+/* EFFECTS */
 
 function firework(){
 
@@ -262,6 +338,7 @@ for(let i=0;i<20;i++){
 let f=document.createElement("div")
 f.className="fire"
 f.style.left=Math.random()*100+"%"
+
 document.body.appendChild(f)
 
 setTimeout(()=>f.remove(),1200)
@@ -292,43 +369,6 @@ function vibrate(){
 if(navigator.vibrate){
 navigator.vibrate([200,100,200])
 }
-
-}
-
-function chart(){
-
-let c=document.getElementById("chart")
-let ctx=c.getContext("2d")
-
-ctx.clearRect(0,0,300,120)
-
-for(let i=0;i<20;i++){
-
-let x=i*15
-let h=Math.random()*100
-
-ctx.fillStyle="#007bff"
-ctx.fillRect(x,120-h,10,h)
-
-}
-
-heatmap()
-
-}
-
-function heatmap(){
-
-let h="🔥 Heatmap: "
-
-for(let i=1;i<=10;i++){
-
-let v=Math.floor(Math.random()*100)
-
-h+=i+"("+v+"%) "
-
-}
-
-document.getElementById("heatmap").innerText=h
 
 }
 
