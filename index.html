@@ -1,24 +1,17 @@
-<!DOCTYPE html>
-<html lang="vi">
+<!DOCTYPE html><html lang="vi">
 <head>
 <meta charset="UTF-8">
-<title>Vietlott AI Predictor PRO 21 ULTRA</title>
-
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="mobile-web-app-capable" content="yes">
-
-<style>
+<title>Dự Đoán Vietlott AI PRO 22</title><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="ico.png"><style>
 
 body{
 margin:0;
-font-family:Arial;
-color:white;
+font-family:Arial,Helvetica,sans-serif;
 text-align:center;
+color:#111;
 
-background:linear-gradient(270deg,#1a1a2e,#16213e,#0f3460,#533483);
+background:linear-gradient(270deg,#ffffff,#e6f3ff,#f8fbff,#ffffff);
 background-size:600% 600%;
-animation:bgmove 20s infinite;
+animation:bgmove 18s infinite;
 }
 
 @keyframes bgmove{
@@ -27,32 +20,85 @@ animation:bgmove 20s infinite;
 100%{background-position:0% 50%}
 }
 
-h1{
-font-size:34px;
+/* Splash */
+
+#splash{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:#000;
+color:white;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:32px;
+z-index:9999;
+animation:splashfade 2.5s forwards;
+}
+
+@keyframes splashfade{
+0%{opacity:1}
+80%{opacity:1}
+100%{opacity:0;visibility:hidden}
+}
+
+/* Header */
+
+.header{
 margin-top:20px;
 }
 
+.clock{
+font-size:18px;
+margin-top:5px;
+}
+
 .status{
-color:#00ff9c;
-font-size:16px;
-margin-bottom:10px;
+margin-top:5px;
+font-size:15px;
+}
+
+.led{
+display:inline-block;
+width:10px;
+height:10px;
+background:#00ff00;
+border-radius:50%;
+margin-right:6px;
+animation:blink 1s infinite;
+}
+
+@keyframes blink{
+0%{opacity:1}
+50%{opacity:0.2}
+100%{opacity:1}
+}
+
+/* Result */
+
+.resultTitle{
+font-size:22px;
+margin-top:20px;
+font-weight:bold;
 }
 
 .result{
-margin-top:30px;
+margin-top:10px;
 min-height:120px;
 }
 
 .ball{
 display:inline-block;
-width:60px;
-height:60px;
-line-height:60px;
+width:55px;
+height:55px;
+line-height:55px;
 border-radius:50%;
 margin:6px;
-font-size:22px;
+font-size:20px;
 font-weight:bold;
-background:gold;
+background:#ffd700;
 color:black;
 }
 
@@ -61,6 +107,8 @@ background:red;
 color:white;
 }
 
+/* Buttons */
+
 .buttons{
 position:fixed;
 bottom:10px;
@@ -68,20 +116,22 @@ width:100%;
 }
 
 button{
-margin:5px;
-padding:10px 16px;
+margin:4px;
+padding:10px 14px;
 border:none;
 border-radius:20px;
-background:gold;
-color:black;
-font-size:16px;
+background:#007bff;
+color:white;
+font-size:15px;
 }
+
+/* Jackpot meter */
 
 .meter{
 width:80%;
 height:14px;
-background:#333;
-margin:20px auto;
+background:#ccc;
+margin:15px auto;
 border-radius:10px;
 overflow:hidden;
 }
@@ -92,12 +142,14 @@ width:40%;
 background:red;
 }
 
+/* Firework */
+
 .fire{
 position:fixed;
 bottom:0;
 width:6px;
 height:6px;
-background:yellow;
+background:orange;
 border-radius:50%;
 animation:rocket 1.2s ease-out forwards;
 }
@@ -107,53 +159,56 @@ animation:rocket 1.2s ease-out forwards;
 100%{transform:translateY(-100vh)}
 }
 
-</style>
-</head>
-
-<body>
-
-<h1>Vietlott AI Predictor</h1>
-
-<div class="status">✔ Đang kết nối dữ liệu Vietlott</div>
-
-<div>
-
-🎯 Jackpot Meter AI
+</style></head><body><div id="splash">
+🚀 Vietlott AI Predictor
+</div><div class="header"><h2>Vietlott AI Predictor</h2><div class="clock" id="clock"></div><div class="status">
+<span class="led"></span>
+Kết nối thời gian thực tới Vietlott
+</div></div><div>🎯 Jackpot Meter AI
 
 <div class="meter">
 <div id="meterbar" class="meterbar"></div>
-</div>
-
-<div id="percent">40%</div>
-
-</div>
-
-<div class="result" id="result">
-Nhấn nút để AI dự đoán
-</div>
-
-<div class="buttons">
-
-<button onclick="mega()">Mega 6/45</button>
+</div><div id="percent">40%</div></div><div class="resultTitle" id="gameTitle">
+Kết quả dự đoán
+</div><div class="result" id="result">
+Nhấn nút để bắt đầu
+</div><div class="buttons"><button onclick="mega()">Mega 6/45</button>
 <button onclick="power()">Power 6/55</button>
 <button onclick="jackpotMega()">AI Jackpot Mega</button>
 <button onclick="jackpotPower()">AI Jackpot Power</button>
 
-<br>
-
-<button onclick="bingo()">Bingo 18</button>
+<br><button onclick="bingo()">Bingo 18</button>
 <button onclick="keno()">Keno</button>
 <button onclick="lotto()">Lotto 5/35</button>
 
-<br>
-
-<button onclick="max3d()">Max 3D</button>
+<br><button onclick="max3d()">Max 3D</button>
 <button onclick="max3dplus()">Max 3D+</button>
 <button onclick="max3dpro()">Max 3D Pro</button>
 
-</div>
+</div><script>
 
-<script>
+/* CLOCK */
+
+function clock(){
+
+let d=new Date()
+
+let day=d.getDate().toString().padStart(2,'0')
+let month=(d.getMonth()+1).toString().padStart(2,'0')
+let year=d.getFullYear()
+
+let h=d.getHours().toString().padStart(2,'0')
+let m=d.getMinutes().toString().padStart(2,'0')
+let s=d.getSeconds().toString().padStart(2,'0')
+
+document.getElementById("clock").innerText=
+day+"/"+month+"/"+year+"  "+h+":"+m+":"+s
+
+}
+
+setInterval(clock,1000)
+
+/* RANDOM */
 
 function rand(max){
 return Math.floor(Math.random()*max)+1
@@ -174,7 +229,11 @@ if(!arr.includes(n)) arr.push(n)
 return arr
 }
 
-function show(nums,power){
+/* SHOW RESULT */
+
+function show(nums,power,title){
+
+document.getElementById("gameTitle").innerText="🎰 "+title
 
 let r=document.getElementById("result")
 
@@ -205,74 +264,35 @@ r.appendChild(p)
 }
 
 sound()
-
 vibrate()
-
 firework()
-
 meter()
 
 }
 
-function mega(){
+/* GAME FUNCTIONS */
 
-show(unique(6,45))
+function mega(){ show(unique(6,45),null,"Mega 6/45") }
 
-}
+function power(){ show(unique(6,55),rand(55),"Power 6/55") }
 
-function power(){
+function jackpotMega(){ show(unique(6,45),null,"AI Jackpot Mega") }
 
-show(unique(6,55),rand(55))
+function jackpotPower(){ show(unique(6,55),rand(55),"AI Jackpot Power") }
 
-}
+function bingo(){ show(unique(5,18),null,"Bingo 18") }
 
-function jackpotMega(){
+function keno(){ show(unique(10,80),null,"Keno") }
 
-show(unique(6,45))
+function lotto(){ show(unique(5,35),null,"Lotto 5/35") }
 
-}
+function max3d(){ show([rand(9),rand(9),rand(9)],null,"Max 3D") }
 
-function jackpotPower(){
+function max3dplus(){ show([rand(9),rand(9),rand(9),rand(9)],null,"Max 3D+") }
 
-show(unique(6,55),rand(55))
+function max3dpro(){ show([rand(9),rand(9),rand(9),rand(9),rand(9)],null,"Max 3D Pro") }
 
-}
-
-function bingo(){
-
-show(unique(5,18))
-
-}
-
-function keno(){
-
-show(unique(10,80))
-
-}
-
-function lotto(){
-
-show(unique(5,35))
-
-}
-
-function max3d(){
-
-show([rand(9),rand(9),rand(9)])
-
-}
-
-function max3dplus(){
-
-show([rand(9),rand(9),rand(9),rand(9)])
-
-}
-
-function max3dpro(){
-
-show([rand(9),rand(9),rand(9),rand(9),rand(9)])
-
-}
+/* FIREWORK */
 
 function firework(){
 
@@ -291,6 +311,8 @@ setTimeout(()=>f.remove(),1200)
 }
 
 }
+
+/* SOUND */
 
 function sound(){
 
@@ -312,6 +334,8 @@ g.gain.exponentialRampToValueAtTime(0.0001,ctx.currentTime+0.5)
 
 }
 
+/* VIBRATE */
+
 function vibrate(){
 
 if(navigator.vibrate){
@@ -321,6 +345,8 @@ navigator.vibrate([200,100,200])
 }
 
 }
+
+/* JACKPOT METER */
 
 function meter(){
 
@@ -332,7 +358,5 @@ document.getElementById("meterbar").style.width=p+"%"
 
 }
 
-</script>
-
-</body>
+</script></body>
 </html>
