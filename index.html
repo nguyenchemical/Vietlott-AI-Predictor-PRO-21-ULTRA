@@ -47,6 +47,36 @@ width:80px;
 margin-top:20px;
 }
 
+.clock{
+margin-top:5px;
+font-size:16px;
+}
+
+.status{
+margin-top:6px;
+}
+
+.led{
+display:inline-block;
+width:10px;
+height:10px;
+background:#00ff00;
+border-radius:50%;
+margin-right:6px;
+animation:blink 1s infinite;
+}
+
+@keyframes blink{
+0%{opacity:1}
+50%{opacity:0.3}
+100%{opacity:1}
+}
+
+.resultTitle{
+font-size:22px;
+margin-top:15px;
+}
+
 .result{
 margin-top:20px;
 min-height:120px;
@@ -122,27 +152,47 @@ top:50%;
 left:50%;
 transform:translate(-50%,-50%);
 background:#222;
-padding:20px;
-border-radius:10px;
+padding:30px;
+border-radius:15px;
 display:none;
+width:90%;
+max-width:420px;
+}
+
+.popup select{
+width:100%;
+padding:15px;
+font-size:20px;
+margin-top:10px;
+}
+
+.popup button{
+width:100%;
+padding:15px;
+font-size:20px;
+margin-top:10px;
 }
 
 </style></head><body><div id="splash">🎰 Vietlott AI QUANTUM</div><div class="logo">
 <img src="icon.png">
 <h2>Trợ Lý Dự Đoán Vietlott AI</h2>
-</div>🎯 Jackpot Meter AI
-
-<div class="meter">
+</div><div class="clock" id="clock"></div><div class="status">
+<span class="led"></span>
+Đang kết nối tới Vietlott
+</div><div class="meter">
 <div id="meterbar" class="meterbar"></div>
-</div><div id="percent">40%</div><div id="result" class="result">
+</div><div id="percent">40%</div><div class="resultTitle" id="gameTitle">
+Kết quả dự đoán
+</div><div id="result" class="result">
 Nhấn nút để dự đoán
 </div><button onclick="birth()">🎂 Dự đoán theo ngày sinh</button>
+
+<button onclick="aiMega()">🤖 AI Mega</button>
+<button onclick="aiPower()">🤖 AI Power</button>
 
 <div id="birthPopup" class="popup"><h3>Chọn ngày sinh</h3><select id="day"></select>
 <select id="month"></select>
 <select id="year"></select>
-
-<br><br>
 
 <button onclick="predictBirth()">Dự đoán</button>
 <button onclick="closeBirth()">Đóng</button>
@@ -158,6 +208,29 @@ Nhấn nút để dự đoán
 <button onclick="max3dpro()">Max 3D Pro</button>
 
 </div><script>
+
+/* CLOCK */
+
+function clock(){
+
+let d=new Date()
+
+let day=d.getDate().toString().padStart(2,'0')
+let month=(d.getMonth()+1).toString().padStart(2,'0')
+let year=d.getFullYear()
+
+let h=d.getHours().toString().padStart(2,'0')
+let m=d.getMinutes().toString().padStart(2,'0')
+let s=d.getSeconds().toString().padStart(2,'0')
+
+document.getElementById("clock").innerText=
+day+"/"+month+"/"+year+" "+h+":"+m+":"+s
+
+}
+
+setInterval(clock,1000)
+
+/* RANDOM */
 
 function rand(max){
 return Math.floor(Math.random()*max)+1
@@ -179,7 +252,11 @@ return arr
 
 }
 
-function show(nums,power){
+/* SHOW RESULT */
+
+function show(nums,power,title){
+
+document.getElementById("gameTitle").innerText="🎰 "+title
 
 let r=document.getElementById("result")
 
@@ -205,19 +282,46 @@ r.appendChild(p)
 
 meter()
 firework()
-sound()
-vibrate()
 
 }
 
-function mega(){show(unique(6,45))}
-function power(){show(unique(6,55),rand(55))}
-function bingo(){show(unique(5,18))}
-function keno(){show(unique(10,80))}
-function lotto(){show(unique(5,35))}
-function max3d(){show([rand(9),rand(9),rand(9)])}
-function max3dplus(){show([rand(9),rand(9),rand(9),rand(9)])}
-function max3dpro(){show([rand(9),rand(9),rand(9),rand(9),rand(9)])}
+/* GAMES */
+
+function mega(){ show(unique(6,45),null,"Mega 6/45") }
+
+function power(){ show(unique(6,55),rand(55),"Power 6/55") }
+
+function bingo(){ show(unique(5,18),null,"Bingo 18") }
+
+function keno(){ show(unique(10,80),null,"Keno") }
+
+function lotto(){ show(unique(5,35),null,"Lotto 5/35") }
+
+function max3d(){ show([rand(9),rand(9),rand(9)],null,"Max 3D") }
+
+function max3dplus(){ show([rand(9),rand(9),rand(9),rand(9)],null,"Max 3D+") }
+
+function max3dpro(){ show([rand(9),rand(9),rand(9),rand(9),rand(9)],null,"Max 3D Pro") }
+
+/* AI PREDICT */
+
+function aiMega(){
+
+let nums=unique(6,45)
+
+show(nums,null,"AI dự đoán Mega 6/45")
+
+}
+
+function aiPower(){
+
+let nums=unique(6,55)
+
+show(nums,rand(55),"AI dự đoán Power 6/55")
+
+}
+
+/* METER */
 
 function meter(){
 
@@ -228,6 +332,8 @@ document.getElementById("percent").innerText=p+"%"
 document.getElementById("meterbar").style.width=p+"%"
 
 }
+
+/* FIREWORK */
 
 function firework(){
 
@@ -241,31 +347,6 @@ document.body.appendChild(f)
 
 setTimeout(()=>f.remove(),1200)
 
-}
-
-}
-
-function sound(){
-
-let ctx=new (window.AudioContext||window.webkitAudioContext)()
-
-let o=ctx.createOscillator()
-let g=ctx.createGain()
-
-o.connect(g)
-g.connect(ctx.destination)
-
-o.frequency.value=700
-o.start()
-
-g.gain.exponentialRampToValueAtTime(0.0001,ctx.currentTime+0.5)
-
-}
-
-function vibrate(){
-
-if(navigator.vibrate){
-navigator.vibrate([200,100,200])
 }
 
 }
@@ -286,11 +367,11 @@ document.getElementById("birthPopup").style.display="none"
 
 function predictBirth(){
 
-show(unique(6,45))
+show(unique(6,45),null,"Dự đoán theo ngày sinh")
 
 }
 
-/* FILL SELECT */
+/* SELECT */
 
 for(let i=1;i<=31;i++){
 
